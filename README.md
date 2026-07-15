@@ -19,10 +19,12 @@
                     ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗
                      ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝
 
-─────────────────────────────────────────────────────────────────────────────────
-  A community collection of Claude Code skills, CLAUDE.md configurations,
-  custom commands, and reference materials for DevSecOps engineers.
-─────────────────────────────────────────────────────────────────────────────────
+---
+
+A community collection of Claude Code skills, CLAUDE.md configurations,
+custom commands, and reference materials for DevSecOps engineers.
+
+---
 
 ## What this repository is
 
