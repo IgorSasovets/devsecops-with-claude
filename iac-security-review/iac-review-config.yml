@@ -1,0 +1,100 @@
+# IaC Security Review Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+# Copy this file into the ROOT of the project you want to review.
+# All four /iac-* skills read this file automatically when present.
+# Values here serve as defaults; CLI arguments passed to each skill override them.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── GENERAL ──────────────────────────────────────────────────────────────────
+
+# Human-readable name for the target project (used in report headers)
+project_name: "my-project"
+
+# Cloud provider for this review (v1 supports: aws)
+provider: aws
+
+# IaC frameworks present in this repo (used by /iac-map for targeted discovery)
+# Supported: terraform, cloudformation, both
+iac_type: both
+
+# ── EXCLUSIONS ───────────────────────────────────────────────────────────────
+# Paths listed here are skipped by ALL stages.
+# Supports glob patterns. Paths are relative to the project root.
+# The skill adds these on top of its own built-in exclusions
+# (.git, node_modules, __pycache__, *.tfstate, *.tfstate.backup).
+
+exclude_paths:
+  # Dependency / vendor caches
+  - ".terraform/**"
+  - "vendor/**"
+  - "**/node_modules/**"
+
+  # Generated / compiled output
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.terragrunt-cache/**"
+
+  # Test fixtures (may contain intentionally insecure configs)
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/testdata/**"
+  - "**/__tests__/**"
+  - "**/fixtures/**"
+  - "**/mocks/**"
+
+  # Example / sample configs (not deployed)
+  - "**/examples/**"
+  - "**/samples/**"
+
+  # Documentation
+  - "**/docs/**"
+
+  # CI/CD pipeline definitions (not IaC templates)
+  # - ".github/**"
+  # - ".gitlab-ci.yml"
+
+  # Add your own exclusions below:
+  # - "path/to/skip/**"
+
+# ── ENVIRONMENT CONTEXT ──────────────────────────────────────────────────────
+# These values feed CVSSv3.1 environmental scoring in /iac-audit and
+# the threat model interview in /iac-threat-model.
+# Leave a field blank ("") if unknown; the skill will use conservative defaults.
+
+environment:
+  # Deployment tier: production | staging | development | unknown
+  tier: "production"
+
+  # Is the workload directly reachable from the internet?
+  internet_facing: true
+
+  # Data sensitivity — highest classification of data processed or stored:
+  # public | internal | confidential | restricted
+  data_classification: "confidential"
+
+  # Compliance frameworks in scope (used to weight findings)
+  # Examples: PCI-DSS, HIPAA, SOC2, ISO27001, GDPR, FedRAMP
+  compliance_frameworks: []
+
+  # AWS account type context (affects blast-radius scoring)
+  # options: standalone | organization-member | organization-management
+  aws_account_type: "standalone"
+
+# ── KNOWN ISSUES FILE ────────────────────────────────────────────────────────
+# Optional path to an existing scanner report that /iac-threat-model will
+# ingest and transform into KNOWN_ISSUES.md.
+# Supported formats: Checkov JSON, tfsec JSON/SARIF, Prowler JSON/CSV, Markdown.
+# Path is relative to the project root.
+
+known_issues_file: ""
+# known_issues_file: "reports/checkov-results.json"
+
+# ── OUTPUT ───────────────────────────────────────────────────────────────────
+
+output:
+  # Directory (relative to project root) where all stage outputs are written.
+  # Skills create this directory automatically if it does not exist.
+  results_dir: "iac-review-results"
+
+  # Include raw resource inventory in PROJECT_MAP.md (can be large for big repos)
+  include_resource_inventory: true
