@@ -144,7 +144,7 @@ devsecops-with-claude/
 
 ---
 
-## Available toolkits
+## Available resources/toolkits
 
 → See [`AVAILABLE_RESOURCES.md`](AVAILABLE_RESOURCES.md)
 
