@@ -62,7 +62,7 @@ accounts. Every tool here is a read-only analysis and reasoning aid. Nothing mod
 
 - [Philosophy](#philosophy)
 - [Repository structure](#repository-structure)
-- [Available toolkits](#available-toolkits)
+- [Available resources and toolkits](#available-resources-and-toolkits)
 - [How to use this repository](#how-to-use-this-repository)
 - [Understanding the building blocks](#understanding-the-building-blocks)
 - [Contributing](#contributing)
@@ -144,7 +144,7 @@ devsecops-with-claude/
 
 ---
 
-## Available resources/toolkits
+## Available resources and toolkits
 
 → See [`AVAILABLE_RESOURCES.md`](AVAILABLE_RESOURCES.md)
 
