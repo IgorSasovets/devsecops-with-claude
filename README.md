@@ -146,22 +146,7 @@ devsecops-with-claude/
 
 ## Available toolkits
 
-### `iac-security-review` — IaC Template Security Review Pipeline
-
-A four-stage Claude Code pipeline for comprehensive security review of Terraform
-and AWS CloudFormation templates. Covers project mapping, STRIDE threat modeling,
-CIS AWS Foundations Benchmark v4.0.1 assessment, and finding validation with
-CVSSv3.1 scoring.
-
-**Skills:** `/iac-map` · `/iac-threat-model` · `/iac-audit` · `/iac-reassess`
-
-**Standards covered:** CIS AWS Foundations Benchmark v4.0.1 (29 IaC-checkable
-automated controls), STRIDE threat modeling, OWASP IaC Security Cheatsheet,
-CVSSv3.1 with environmental scoring.
-
-**Supports:** Terraform · AWS CloudFormation · Checkov · tfsec · Prowler
-
-→ See [`iac-security-review/README.md`](iac-security-review/README.md)
+→ See [`AVAILABLE_RESOURCES.md`](AVAILABLE_RESOURCES.md)
 
 ---
 
