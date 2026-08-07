@@ -1,0 +1,16 @@
+{
+  // Set to true to skip vulnerabilities only reachable through devDependencies.
+  // Useful when you are confident devDependencies are never deployed to production.
+  // CLI override: --skip-dev
+  "skipDev": false,
+
+  // List of package names to exclude from analysis entirely.
+  // Use for internal stubs, known-safe forks, or packages already triaged externally.
+  // CLI override: --skip pkg1,pkg2
+  "skipPackages": [],
+
+  // Output directory for temp files and final reports.
+  // Relative to the project root. Created automatically if it does not exist.
+  // Default: "vulnerable-dependencies-analysis"
+  "outputDir": "vulnerable-dependencies-analysis"
+}
