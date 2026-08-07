@@ -1,0 +1,160 @@
+# .opengrep-config.yml
+# Opengrep Rules Creator — project configuration template
+#
+# USAGE
+#   Copy this file to the root of the project you want to analyse:
+#     cp .opengrep-config.yml /path/to/your-project/.opengrep-config.yml
+#
+#   Then fill in the values below. All fields are optional — the pipeline
+#   uses safe defaults when a field is absent or left as its placeholder value.
+#
+# PIPELINE STAGES THAT READ THIS FILE
+#   /opengrep-code-recon  — reads all fields
+#   /opengrep-rule-creator — reads: known_issues_file, output_dir, project_context
+#
+# ──────────────────────────────────────────────────────────────────────────────
+
+# project_context
+#
+# Free-text description of the project, its deployment environment, and its
+# trust boundaries. This is the single most impactful field you can fill in.
+# The more context provided here, the more the pipeline can distinguish between
+# input that an attacker controls and input that is trusted by design.
+#
+# Include:
+#   - What the application does and who its users are
+#   - How it is deployed (public internet, internal network, mobile client, etc.)
+#   - Which inputs are trusted (admin config, authenticated session, etc.)
+#   - Which inputs are untrusted (public API, file uploads, webhooks, etc.)
+#   - Any known-safe patterns that should never trigger rules (e.g. a custom
+#     sanitizer function your team wrote that the pipeline will see as a sink)
+#
+# Examples:
+#   "Node.js REST API serving unauthenticated public requests on /api/v1/*.
+#    Admin routes under /admin/* require a valid JWT signed with RS256.
+#    Config files and environment variables are trusted. All user-supplied
+#    data arrives via req.body, req.query, and req.params."
+#
+#   "Django monolith with PostgreSQL. Authentication via django-allauth.
+#    Payments handled by Stripe SDK — never touch raw card data. Background
+#    jobs run in Celery. Public endpoints: /api/products/*, /api/orders/*.
+#    Staff-only endpoints: /staff/*. All staff endpoints are behind
+#    @login_required + @permission_required('staff')."
+#
+project_context: ""
+
+
+# languages
+#
+# Restrict Stage 1 recon to specific languages. When this list is empty, all
+# supported languages are auto-detected from file extensions.
+#
+# Supported values:
+#   js       — JavaScript (.js, .mjs)
+#   ts       — TypeScript (.ts, .tsx)
+#   python   — Python (.py)
+#   java     — Java (.java)
+#   kotlin   — Kotlin (.kt, .kts)
+#   go       — Go (.go)
+#   php      — PHP (.php)
+#   swift    — Swift (.swift)
+#   dart     — Dart / Flutter (.dart)
+#
+# Use this to speed up recon on large polyglot monorepos where only one service
+# is under review. Example (Python backend only):
+#   languages:
+#     - python
+#
+# Example (full-stack JS/TS):
+#   languages:
+#     - js
+#     - ts
+#
+languages: []
+
+
+# depth
+#
+# Override the auto-scaling depth for Stage 1.
+# When left empty, depth is chosen automatically by source file count:
+#   < 200 files   → deep    (read key files in full, trace all entry points)
+#   200–2000 files → balanced (targeted head + grep; sample large files)
+#   > 2000 files  → fast    (grep-only; no full file reads)
+#
+# Values:
+#   deep      — most thorough; highest token spend; best for small services
+#   balanced  — good default for most projects
+#   fast      — grep-only; lowest token spend; best for large monorepos
+#
+# Leave empty to use auto-scaling (recommended).
+#
+depth: ""
+
+
+# exclude_paths
+#
+# Additional glob patterns to exclude from recon, on top of the built-in
+# exclusions. The built-in list already covers:
+#   .git/**, node_modules/**, vendor/**, dist/**, build/**,
+#   __pycache__/**, .gradle/**, .idea/**, .vscode/**, Pods/**,
+#   .dart_tool/**, .pub-cache/**, target/**, .cargo/**,
+#   *.min.js, *.map, *.lock, coverage/**, .tox/**
+#
+# Use this field to add project-specific exclusions such as:
+#   - Generated code directories
+#   - Legacy / deprecated code not under active development
+#   - Vendored snapshots checked in for reproducibility
+#   - Test fixture directories containing intentionally vulnerable code
+#     (excluding these avoids false hot-spot counts in CODE_RECON.md)
+#
+# Examples:
+#   exclude_paths:
+#     - "legacy/**"
+#     - "generated/**"
+#     - "**/*.generated.ts"
+#     - "src/vendor/old-sdk/**"
+#     - "tests/fixtures/vulnerable/**"
+#
+exclude_paths: []
+
+
+# known_issues_file
+#
+# Path (relative to project root) to a KNOWN_ISSUES.md file that documents
+# previously identified vulnerabilities. When this file is present, Stage 2
+# treats its entries as the highest-priority rule candidates — rules derived
+# from your own vulnerability history are the most valuable, as they target
+# patterns that have already been exploited or found in your codebase.
+#
+# If this field is empty and the file does not exist at the default location
+# (opengrep-rules-creator/KNOWN_ISSUES.md), Stage 2 will offer to create it
+# interactively via a short interview.
+#
+# Use KNOWN_ISSUES_TEMPLATE.md (in this toolkit) as the starting format.
+#
+# Examples:
+#   known_issues_file: "opengrep-rules-creator/KNOWN_ISSUES.md"   ← default
+#   known_issues_file: "docs/security/KNOWN_ISSUES.md"
+#   known_issues_file: "security/vulnerability-register.md"
+#
+known_issues_file: ""
+
+
+# output_dir
+#
+# Directory (relative to project root) where Stage 1 and Stage 2 write all
+# output files. The directory is created automatically if it does not exist.
+#
+# Output files written here:
+#   CODE_RECON.md              ← Stage 1 recon report
+#   KNOWN_ISSUES.md            ← created by Stage 2 if absent
+#   RULES_INDEX.md             ← running index of created rules
+#   rules/<rule-id>.yaml       ← one file per rule
+#   tests/<rule-id>.<ext>      ← one test file per rule
+#   logs/<rule-id>-validate.log
+#   logs/validation-summary.log
+#
+# Change this only if `opengrep-rules-creator` conflicts with an existing
+# directory in your project.
+#
+output_dir: "opengrep-rules-creator"
