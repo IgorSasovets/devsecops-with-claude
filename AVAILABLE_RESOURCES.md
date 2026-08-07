@@ -50,5 +50,59 @@ no write permissions needed or used).
 
 ---
 
+### `opengrep-rules-creator` — Opengrep Rules Creator Pipeline
+
+A two-stage Claude Code pipeline that analyses application source code and
+generates production-ready [Opengrep](https://github.com/opengrep/opengrep)
+SAST rules tailored to the project's actual frameworks, entry points,
+sanitizers, and vulnerability history. Stage 1 maps the codebase — tech stack,
+data flows, dangerous sinks, validators, business logic, and dependencies —
+and produces a structured recon report. Stage 2 reads that report and creates
+one `.yaml` rule file per finding, with full metadata, test cases, and
+`opengrep validate` syntax checking. Rules are generated one at a time with
+operator approval, or in batch via `--autonomous` mode. A `tailored` mode
+creates a single precise rule for a specific CVE or library method on demand.
+
+**Skills:** `/opengrep-code-recon` · `/opengrep-rule-creator`
+
+**Standards covered:** OWASP Top 10 Web (2021) — A01, A02, A03, A05, A06,
+A07, A08, A09; OWASP API Security Top 10 (2023) — API1–API5, API8; OWASP
+Mobile Top 10 (2024) — M1–M5, M9; CWE mappings on every rule; CVSSv3.1
+scoring with complete vector on every rule.
+
+**Supports:** JavaScript · TypeScript · Python · Java · Kotlin · Go · PHP ·
+Swift · Dart · Opengrep CLI (optional — used for `opengrep validate` syntax
+checking; falls back to static review when absent).
+
+→ Opengrep Rules Creator Pipeline. See [`opengrep-rules-creator/README.md`](opengrep-rules-creator/README.md)
+
+---
+
+### `npm-audit-analysis` — npm Dependency Vulnerability Analysis
+
+A single-skill Claude Code toolkit that ingests an `npm audit` JSON report (or
+generates one by running `npm audit --json` itself), traces each vulnerable
+dependency to actual usage in your source code, assesses real-world exploitability,
+and produces a structured Markdown + JSON report. Findings are ranked by confirmed
+exploitability rather than raw CVSS score. Per-finding temp files are written
+progressively so analysis survives token-limit interruptions and can be resumed
+across sessions. The skill never modifies project files or applies fixes — it is
+read-only analysis only.
+
+**Skills:** `/npm-audit-analysis`
+
+**Standards covered:** CVSSv3.1 (scores read from npm advisory data), CWE
+(identifiers extracted per finding), npm advisory database (all advisories
+surfaced by `npm audit --json`), OWASP Top 10 A06:2021 — Vulnerable and Outdated
+Components.
+
+**Supports:** Any Node.js / npm project · npm v7+ · JavaScript · TypeScript ·
+pre-generated audit JSON or live `npm audit` run · configurable skip lists for
+dev-only dependencies and named packages.
+
+→ npm Dependency Vulnerability Analysis. See [`npm-audit-analysis/README.md`](npm-audit-analysis/README.md)
+
+---
+
 *To add a new toolkit to this list, follow the contribution guide in [`README.md`](README.md)
 and add an entry here in the same format, keeping entries in alphabetical order by folder name.*
